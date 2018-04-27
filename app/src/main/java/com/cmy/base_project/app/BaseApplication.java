@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class BaseApplication extends Application {
         super.onCreate();
         mContext = getApplicationContext();
         // TODO: 2018/4/27 某些库初始化的操作可以放在这里，例如GreenDao和Fresco等等
+        /*初始化Fresco*/
+        Fresco.initialize(this);
     }
 
     /**

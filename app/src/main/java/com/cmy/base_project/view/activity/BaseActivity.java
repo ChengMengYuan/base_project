@@ -1,16 +1,15 @@
 package com.cmy.base_project.view.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.cmy.base_project.app.BaseApplication;
 
@@ -26,11 +25,10 @@ import com.cmy.base_project.app.BaseApplication;
  * {@link #initView()}方法用来初始化空间<p>
  * {@link #initData()}方法用来初始化数据<p>
  * {@link #doBusiness(Context)}方法用来实现业务逻辑<p>
- * {@link #toastMsg(String)}方法用来toast<p>
- * {@link #logMsg(String)}方法用来打印debug信息<p>
+ * {@link #openActivity(Class)}&{@link #openActivityAndCloseThis(Class)}方法用来实现界面跳转<p>
  */
 public abstract class BaseActivity extends FragmentActivity
-        implements View.OnClickListener {
+        implements View.OnClickListener{
     /**
      * context
      */
@@ -39,12 +37,6 @@ public abstract class BaseActivity extends FragmentActivity
      * TAG
      */
     protected final String TAG = this.getClass().getSimpleName();
-    /**
-     * debug版本才输出日志
-     */
-    protected boolean isDebug = true;
-    // TODO:           ⬆⬆⬆⬆ 2018/4/27 线上版本应该改为 false
-
     /**
      * 当第一次调用一个Activity就会执行onCreate方法
      *
@@ -226,19 +218,26 @@ public abstract class BaseActivity extends FragmentActivity
         }
     }
 
-    /**
-     * @param msg 需要展示的消息
-     */
-    protected void toastMsg(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    /********************** activity跳转 **********************************/
+    public void openActivity(Class<?> targetActivityClass) {
+        openActivity(targetActivityClass, null);
     }
 
-    /**
-     * @param msg 需要展示的消息
-     */
-    protected void logMsg(String msg) {
-        if (isDebug) {
-            Log.d(TAG, msg);
+    public void openActivity(Class<?> targetActivityClass, Bundle bundle) {
+        Intent intent = new Intent(this, targetActivityClass);
+        if (bundle != null) {
+            intent.putExtras(bundle);
         }
+        startActivity(intent);
+    }
+
+    public void openActivityAndCloseThis(Class<?> targetActivityClass) {
+        openActivity(targetActivityClass);
+        this.finish();
+    }
+
+    public void openActivityAndCloseThis(Class<?> targetActivityClass, Bundle bundle) {
+        openActivity(targetActivityClass, bundle);
+        this.finish();
     }
 }
