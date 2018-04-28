@@ -12,6 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.cmy.base_project.app.BaseApplication;
+import com.cmy.base_project.view.api.ViewBaseApi;
+
 
 /**
  * 文 件 名: BaseActivity<p>
@@ -28,7 +30,7 @@ import com.cmy.base_project.app.BaseApplication;
  * {@link #openActivity(Class)}&{@link #openActivityAndCloseThis(Class)}方法用来实现界面跳转<p>
  */
 public abstract class BaseActivity extends FragmentActivity
-        implements View.OnClickListener{
+        implements ViewBaseApi {
     /**
      * context
      */
@@ -37,6 +39,7 @@ public abstract class BaseActivity extends FragmentActivity
      * TAG
      */
     protected final String TAG = this.getClass().getSimpleName();
+
     /**
      * 当第一次调用一个Activity就会执行onCreate方法
      *
@@ -47,8 +50,13 @@ public abstract class BaseActivity extends FragmentActivity
     public void onCreate(@Nullable Bundle savedInstanceState,
                          @Nullable PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
+
         BaseApplication.getInstance().addActivity(this);
         context = this;
+        setContentView(setResourcesID());
+        initView();
+        initData();
+        doBusiness(context);
     }
 
     /**
@@ -99,56 +107,21 @@ public abstract class BaseActivity extends FragmentActivity
         super.onDestroy();
     }
 
-    @Override
-    public void setContentView(View view) {
-        super.setContentView(view);
-        initView();
-        initData();
-        doBusiness(this);
-    }
-
-    @Override
-    public void setContentView(int layoutResID) {
-        super.setContentView(layoutResID);
-        initView();
-        initData();
-        doBusiness(this);
-    }
-
     /**
-     * [初始化控件]
-     */
-    protected abstract void initView();
-
-    /**
-     * [初始化数据]
-     */
-    protected abstract void initData();
-
-    /**
-     * [业务操作]
+     * 重写点击事件,防止快速点击
      *
-     * @param mContext
+     * @param view 被点击的view
      */
-    protected abstract void doBusiness(Context mContext);
-
-    /**
-     * View点击事件(防止快速点击引起的Bug)
-     **/
-    protected abstract void widgetClick(View view);
+    public abstract void widgetClick(View view);
 
     @Override
     public void onClick(View view) {
-        if (fastClick())
+        if (fastClick()) {
             widgetClick(view);
+        }
     }
 
-    /**
-     * [防止快速点击]
-     *
-     * @return lastClick
-     */
-    private boolean fastClick() {
+    public boolean fastClick() {
         long lastClick = 0;
         if (System.currentTimeMillis() - lastClick <= 1000) {
             return false;
@@ -218,7 +191,7 @@ public abstract class BaseActivity extends FragmentActivity
         }
     }
 
-    /********************** activity跳转 **********************************/
+
     public void openActivity(Class<?> targetActivityClass) {
         openActivity(targetActivityClass, null);
     }

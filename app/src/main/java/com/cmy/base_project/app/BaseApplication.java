@@ -5,9 +5,21 @@ import android.app.Application;
 import android.content.Context;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheEntity;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.cookie.CookieJarImpl;
+import com.lzy.okgo.cookie.store.DBCookieStore;
+import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
+import com.lzy.okgo.model.HttpHeaders;
+import com.lzy.okgo.model.HttpParams;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+
+import okhttp3.OkHttpClient;
+
 
 /**
  * 文 件 名: BaseApplication<p>
@@ -28,7 +40,7 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = getApplicationContext();
-        // TODO: 2018/4/27 某些库初始化的操作可以放在这里，例如GreenDao和Fresco等等
+        //某些库初始化的操作可以放在这里，例如GreenDao和Fresco等等
         /*初始化Fresco*/
         Fresco.initialize(this);
     }

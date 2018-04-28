@@ -9,5 +9,5 @@ package com.cmy.base_project.view.adapter;
  * 修改时间:<p>
  * 修改备注:<p>
  */
-public class BaseAdapter {
+public abstract class BaseAdapter {
 }
